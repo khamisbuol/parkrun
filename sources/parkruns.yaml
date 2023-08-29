@@ -1,0 +1,43 @@
+###############################################################################
+#                                                                             #
+# Description:  This yaml file is used for referencing and navigating to      #
+#               various parkrun location results and event pages. It also     #
+#               includes configurations for navigating to parkrunner pages.   #
+#                                                                             #
+# Note:         These url templates require a base URL which need to be       #
+#               updated for the links to work effectively.                    #
+#                                                                             #
+# Author:       Khamis Buol (C) 2023                                          #
+#                                                                             #
+###############################################################################
+
+first_finishers:
+    template: BASE_URL/results/firstfinishers
+    info: >
+        This template can be used to retreive location information given a 
+        particular country. 
+
+latest_results:
+    template: BASE_URL/LOCATION/results/latestresults
+    info: >
+        This template is used to get the latest results for a particular 
+        parkrun.
+
+event_history: 
+    template: BASE_URL/LOCATION/results/eventhistory
+    info: > 
+        This template is used for navigating to the event history page of a 
+        particular parkrun location. We are able to get information about a 
+        given event including event #, date, no. of finishers, no. volunteers, 
+        and the first man and woman finishers.
+
+single_event:
+    template: BASE_URL/LOCATION/results/EVENT_NO
+    info: > 
+        This template can be used to reference a particular parkrun event, 
+        given it's location and event number. 
+
+parkrunner:
+    summary_results: BASE_URL/parkrunner/PARKRUNNER_ID
+    all_results: BASE_URL/parkrunner/PARKRUNNER_ID/all
+    location_results: BASE_URL/LOCATION/parkrunner/PARKRUNNER_ID

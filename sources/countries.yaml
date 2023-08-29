@@ -1,0 +1,149 @@
+###############################################################################
+#                                                                             #
+# Description:  This yaml file lists all the countries that host parkrun      #
+#               events along with their respective URLs and brief info.       #
+#                                                                             #
+# Source:       https://www.parkrun.com/countries/ (as of 28-08-2023)         #
+#                                                                             #
+# Author:       Khamis Buol (C) 2023                                          #
+#                                                                             #
+###############################################################################
+---
+Australia: 
+    url: https://www.parkrun.com.au
+    info: >
+        parkrun launched in Australia at Main Beach on the Gold Coast on 2 
+        April 2011 with 108 runners, including the great Ron Clarke AO 
+        MBE in attendance.
+
+Austria: 
+    url: https://www.parkrun.co.at
+    info: >
+        Hellbrunn parkrun joins the parkrun family in August 2021
+
+Canada: 
+    url: https://www.parkrun.ca
+    info: >
+        parkrun Canada launched in the heart of the Rocky Mountains in 
+        August 2016, and continues to ignite passion for running 
+        communities across the country.
+
+Denmark: 
+    url: https://www.parkrun.dk
+    info: >
+        Launched at Amager Faelled, Copenhagen in May 2009 by Jonathan 
+        Sydenham, who fell in love with parkrun when he participated while 
+        in the UK.
+
+Eswatini: 
+    url: https://www.parkrun.co.za/events/#8.06/-26.52/31.463
+    info: >
+        Mbabane parkrun joined the parkrun family May 2017 putting 
+        Eswatini on the parkrun map.
+
+Finland: 
+    url: https://www.parkrun.fi
+    info: >
+        parkrun Finland started at Tampere parkrun on 14 October 2017.
+
+France: 
+    url: https://www.parkrun.fr
+    info: >
+        parkrun France launched in June 2015 under the watchful eye of 
+        Anita with the first event in Les Dougnes.
+
+Germany: 
+    url: https://www.parkrun.com.de
+    info: >
+        parkrun Germany started at Küchenholz, Neckarau, and Georgengarten 
+        parkruns on 2 December 2017.
+
+Ireland: 
+    url: https://www.parkrun.ie
+    info: >
+        The first parkrun in the Republic of Ireland started in Malahide 
+        Demesne Castle and Gardens on the 10th November 2012. It continues 
+        to be a revelation.
+
+Italy: 
+    url: https://www.parkrun.it
+    info: >
+        Giorgio brought parkrun to Italy in May 2015 with the first event 
+        taking place in Uditore.
+
+Japan: 
+    url: https://www.parkrun.jp
+    info: >
+        parkrun Japan launched on 6 April 2019 making it the 21st Country 
+        to join the parkrun family. The first event was held at 
+        Futakotamagawa  parkrun, Tokyo.
+
+Malaysia: 
+    url: http://www.parkrun.my
+    info: >
+        Taman Pudu Ulu parkrun started in April 2018 as the first parkrun 
+        in Malaysia.
+
+Namibia: 
+    url: https://www.parkrun.co.za/events/#5.18/-23.071/16.756
+    info: >
+        Swakopmund & Walvis Bay parkruns take place every week in Namibia.
+
+Netherlands: 
+    url: https://www.parkrun.co.nl
+    info: >
+        parkrun Netherlands launched their first events early in February 
+        2020!
+
+New Zealand: 
+    url: https://www.parkrun.co.nz
+    info: >
+        parkrun New Zealand started at Lower Hutt parkrun on 5 May 2012, 
+        with 89 people, including volunteers.
+
+Norway: 
+    url: https://www.parkrun.no
+    info: >
+        parkrun Norway started in August 2017 with the first event in 
+        Tøyenparken, Oslo.
+
+Poland: 
+    url: https://www.parkrun.pl
+    info: >
+        Launched in October 2011 at Gdynia, only five runners attended the 
+        first event. We've now added more events, offering runs to tens of 
+        thousands.
+
+Singapore: 
+    url: https://www.parkrun.sg
+    info: >
+        South East Asia's very first parkrun launched at East Coast Park 
+        in June 2014 with twenty-nine runners completing the sea-front 
+        course.
+
+South Africa: 
+    url: https://www.parkrun.co.za
+    info: >
+        parkrun South Africa started in November 2011 at Delta Park, 
+        Johannesburg, where 22 parkrun pioneers completed the hot and very 
+        hilly 5km loop.
+
+Sweden: 
+    url: https://www.parkrun.se
+    info: >
+        parkrun Sweden started with Haga parkrun, Hagaparken, Stockholm, 
+        in August 2016.
+
+United Kingdom: 
+    url: https://www.parkrun.org.uk
+    info: >
+        Where it all began. The first event was held in Bushy Park, 
+        Teddington in October 2004 comprised of 13 pioneers and four 
+        volunteers.
+
+United States: 
+    url: https://www.parkrun.us
+    info: >
+        Formed June 2012 at Livonia, Michigan with 28 people in 
+        attendance. Recent events are Clermont, Florida and Durham, North 
+        Carolina.
