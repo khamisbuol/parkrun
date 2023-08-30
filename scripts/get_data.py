@@ -5,14 +5,12 @@ import numpy as np
 import validate
 
 parkrun_events_data = gtd.parkrun_events_data
-countries_data = gtd.countries_data
+countries_data      = gtd.countries_data
 
-# countries_list = countries_data.keys()
-
-LATEST_RESULTS="latest_results"
-ATTENDANCE_RECORDS="attendance_records"
-EVENT_HISTORY="event_history"
-SINGLE_EVENT="single_event"
+LATEST_RESULTS     = "latest_results"
+ATTENDANCE_RECORDS = "attendance_records"
+EVENT_HISTORY      = "event_history"
+SINGLE_EVENT       = "single_event"
 
 def get_html_contents(url):
     """
@@ -20,7 +18,7 @@ def get_html_contents(url):
     """
     if validate.url_exists(url):
         response = requests.get(url)
-        tables = pd.read_html(response.content)
+        tables   = pd.read_html(response.content)
         return tables
     return None
 
@@ -55,10 +53,9 @@ def modify_parkrun_template_url(event_type,
     return modified_url
 
 
-
 def get_html_tables(event_type, country, location, event_no):
     template_url = gtd.get_parkrun_url_template(event_type)
-    country_url = gtd.get_country_url(country)
+    country_url  = gtd.get_country_url(country)
 
     modified_url = None
 
@@ -66,16 +63,21 @@ def get_html_tables(event_type, country, location, event_no):
         case "attendance_records":
             modified_url = modify_parkrun_template_url(ATTENDANCE_RECORDS,
                                                        template_url,
-                                                       country_url)
+                                                       country_url,
+                                                       location=None,
+                                                       event_no=None)
         case "latest_results":
             modified_url = modify_parkrun_template_url(LATEST_RESULTS,
                                                        template_url,
-                                                       country_url)
+                                                       country_url,
+                                                       location=None,
+                                                       event_no=None)
         case "event_history":
             modified_url = modify_parkrun_template_url(EVENT_HISTORY, 
                                                        template_url, 
                                                        country_url, 
-                                                       location)
+                                                       location,
+                                                       event_no=None)
         case "single_event":
             modified_url = modify_parkrun_template_url(SINGLE_EVENT, 
                                                        template_url, 
@@ -89,28 +91,30 @@ def get_html_tables(event_type, country, location, event_no):
     # Validate that modified url is valid, then get html tables
     #
     if validate.url_exists(modified_url):
-        response = requests.get(modified_url)
+        response    = requests.get(modified_url)
         html_tables = pd.read_html(response.content)
         return html_tables
     return None
 
 
+###############################################################################
+# TESTING
+###############################################################################
+event_type="attendance_records"
+country = "australia"
+location = "tuggeranong"
+event_no = 100
+get_html_tables(event_type, country, location, event_no)
+
+
 
 def get_attendance_records(country):
-    # template_url = gtd.get_parkrun_url_template(ATTENDANCE_RECORDS)
-    # country_url = gtd.get_country_url(country)
-
-    # attendance_records_url = modify_parkrun_template_url(ATTENDANCE_RECORDS,
-    #                                                      template_url,
-    #                                                      country_url)
     
     #
     # TODO: Get HTML contents
     #       Return multiple HTML tables from attendance records page
     #
-    # html_tables = get_html_contents(attendance_records_url)
-    html_tables = get_html_tables(ATTENDANCE_RECORDS,
-                                  country)
+    html_tables = get_html_tables(ATTENDANCE_RECORDS, country)
 
     return
 
@@ -131,25 +135,16 @@ def get_locations_of_country(country):
     return
 
 
-get_locations_of_country("Australia")
+# get_locations_of_country("Australia")
 
 
 def get_latest_results_one(country, location):
-    # template_url = gtd.get_parkrun_url_template(LATEST_RESULTS)
-    # country_url = gtd.get_country_url(country)
-
-    # latest_results_url = modify_parkrun_template_url(LATEST_RESULTS, 
-    #                                                  template_url, 
-    #                                                  country_url, 
-    #                                                  location)
     
     #
     # TODO: Get HTML contents
     #       Return pandas dataframe
     #
-    html_tables = get_html_tables(LATEST_RESULTS,
-                                  country,
-                                  location)
+    html_tables = get_html_tables(LATEST_RESULTS, country, location)
 
     return
 
@@ -165,7 +160,6 @@ def get_latest_results_all():
     latest_results_all = pd.array
 
     for country in countries_data.keys():
-        # locations = get_locations_of_country(country)
         for location in get_locations_of_country(country):
             latest_results = get_latest_results_one(country, location)
 
@@ -179,23 +173,13 @@ def get_latest_results_all():
 # Get event history (i.e., all the parkrun data) of a particular event
 #
 def get_event_history_summary(country, location):
-    # template_url = gtd.get_parkrun_url_template(EVENT_HISTORY)
-    # country_url  = gtd.get_country_url(country)
-
-    # event_history_url = modify_parkrun_template_url(EVENT_HISTORY, 
-    #                                                 template_url, 
-    #                                                 country_url, 
-    #                                                 location)
     
     #
     # TODO: Retrieve webpage content
     #       IMPORTANT, need to ensure event_no is returned so it can be used
     #       by the get_event_history
     #
-    # html_tables = get_html_contents(event_history_url)
-    html_tables = get_html_tables(EVENT_HISTORY,
-                                  country,
-                                  location)
+    html_tables = get_html_tables(EVENT_HISTORY, country, location)
 
     #
     # TODO: Return list of event numbers
@@ -208,22 +192,10 @@ def get_event_history_summary(country, location):
 # Get event parkrun data of a particular location given an event number
 #
 def get_event_history_one(country, location, event_no):
-    # template_url = gtd.get_parkrun_url_template(SINGLE_EVENT)
-    # country_url  = gtd.get_country_url(country)
-
-    # single_event_url = modify_parkrun_template_url(SINGLE_EVENT, 
-    #                                                template_url, 
-    #                                                country_url, 
-    #                                                location,
-    #                                                event_no)
     #
     # TODO: Retrieve webpage content
     #
-    # html_tables = get_html_contents(single_event_url)
-    html_tables = get_html_tables(SINGLE_EVENT,
-                                  country,
-                                  location,
-                                  event_no)
+    html_tables = get_html_tables(SINGLE_EVENT, country, location, event_no)
 
     return
 
@@ -236,8 +208,6 @@ def get_event_history_all():
         for location in get_locations_of_country(country):
             event_no = None # TODO
             event_history = get_event_history_one(country, location, event_no)
-
-
 
             return
 
