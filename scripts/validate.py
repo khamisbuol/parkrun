@@ -8,7 +8,7 @@ import requests
 import platform
 import os
 
-def validate_url_exists(url: str) -> bool:
+def url_exists(url: str) -> bool:
     """
     This function is used to validate a webpage denoted by a URL string. 
 
@@ -22,7 +22,7 @@ def validate_url_exists(url: str) -> bool:
         return False
     
 
-def validate_file_exists(file_path: str) -> bool:
+def file_exists(file_path: str) -> bool:
     output = os.path.exists(file_path)
     return output
 
