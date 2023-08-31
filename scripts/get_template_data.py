@@ -11,27 +11,37 @@ data_path = path.abspath(path.join(base_path, "..", "data"))
 parkrun_events_data = read_yaml_file(sources_path, "parkruns.yaml")
 countries_data = read_yaml_file(sources_path, "countries.yaml")
 
-def get_country_url(country):
+
+def get_country_url(country: str) -> str:
+    country = country.title()
     if country in countries_data:
         return countries_data[country]['url']
-    return None
+    return
 
-def get_country_info(country):
+
+def get_country_info(country: str) -> str:
+    country = country.title()
     if country in countries_data:
         return countries_data[country]['info']
-    return None
+    return
 
-def get_parkrun_url_template(event_type):
+
+def get_parkrun_url_template(event_type: str) -> str:
+    event_type = event_type.lower()
     if event_type in parkrun_events_data:
         return parkrun_events_data[event_type]['template']
-    return None
+    return
 
-def get_parkrun_event_info(event_type):
+
+def get_parkrun_event_info(event_type: str) -> str:
+    event_type = event_type.lower()
     if event_type in parkrun_events_data:
         return parkrun_events_data[event_type]['info']
-    return None
+    return
 
-def get_parkrunner_template(result_type):
+
+def get_parkrunner_template(result_type: str) -> str:
+    result_type = result_type.lower()
     if result_type in parkrun_events_data["parkrunner"]:
         match result_type:
             case "summary_results":
@@ -42,5 +52,4 @@ def get_parkrunner_template(result_type):
                 return parkrun_events_data["parkrunner"][result_type]
             case _:
                 return None
-    return None
-
+    return
