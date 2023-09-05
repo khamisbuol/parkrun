@@ -208,15 +208,15 @@ def get_latest_results_country(country: str,  detailed: bool = False) -> pd.Data
 # austria_results = get_latest_results_country("Austria")
 # austria_results.to_csv("austria.csv")
 
-australia_results = get_latest_results_country("Australia")
-australia_results.to_csv("australia.csv")
+# australia_results = get_latest_results_country("Australia")
+# australia_results.to_csv("australia.csv")
 
 #
 # Get latest results for event data (and for all countries and locations)
 #
 
 
-def get_latest_results_all(detailed: bool = False):
+def get_latest_results_all(detailed=False):
 
     latest_results_all: list = []
 
@@ -254,15 +254,18 @@ def get_event_history_summary(country: str, location: str):
 
         '''
         Output data frame needs to have the following columns:
-            - Event No.
-            - Date
-            - No. Finishers
-            - No. Volunteers
-            - First Male Finisher
-            - First Male Finisher Time
+            - Event No. VALID as 'Event ##'
+            - Date INVALID, contains date, finisher, their times etc (just take date from this)
+            - No. Finishers (can retrieve from Date/First Finishers column)
+            - No. Volunteers (Can retreive from "Finishers" column)
+            - First Male Finisher (Volunteers column)
+            - First Male Finisher Time (can retreive from 'Male First Finisher' column)
             - First Female Finisher
-            - First Female Finisher Time
+            - First Female Finisher Time (can retreive from Female First Finisher column)
         '''
+        print(df.head())
+        print(df['Male First Finisher.1'])
+        # print(df.iloc[2].head())
     #
     # TODO: Return list of event numbers
     #
@@ -270,9 +273,10 @@ def get_event_history_summary(country: str, location: str):
 
     return df
 
-#
-# Get event parkrun data of a particular location given an event number
-#
+
+country = "australia"
+location = "tuggeranong"
+get_event_history_summary(country, location)
 
 
 def get_event_history_one(country: str, location: str, event_no: int) -> pd.DataFrame:
