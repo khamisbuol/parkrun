@@ -1,6 +1,8 @@
 import re
 import pandas as pd
 from unidecode import unidecode
+import googletrans as Translator
+from langdetect import detect
 
 LRC_DEFAULT: list = ["Position", "Parkrunner", "Gender",
                      "Age Group", "Club", "Time"]
@@ -8,6 +10,32 @@ LRC_DEFAULT: list = ["Position", "Parkrunner", "Gender",
 LRC_DETAILED: list = ["Position", "Parkrunner", "No. Parkruns",
                       "Gender", "Gender Position", "Age Group",
                       "Age Grade", "Club", "Time", "PB/FT?"]
+
+EVENT_HISTORY_SUMMARY: list = ["Event No.", "Date", "No. Finishers", "No. Volunteers",
+                               "First Male Finisher", "First Male Finisher Time",
+                               "First Female Finisher", "First Female Finisher Time"]
+
+
+def translate_column(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
+    translator = Translator()
+
+    # Function to translate a single text with language detection
+    def translate_text_with_detection(text, dest_lang):
+        try:
+            src_lang = detect(text)
+            translation = translator.translate(
+                text, src=src_lang, dest=dest_lang)
+            return translation.text
+        except Exception as e:
+            print(f"Translation error: {e}")
+            return text
+
+    dest_lang = 'en'
+
+    df[col_name] = df[col_name].apply(
+        lambda x: translate_text_with_detection(x, dest_lang))
+
+    return df
 
 
 def transform_location(location: str) -> str:
@@ -109,3 +137,22 @@ def transform_latest_results(df: pd.DataFrame, detailed=False) -> pd.DataFrame:
 
     df = df[LRC_DETAILED] if detailed else df[LRC_DEFAULT]
     return df
+
+
+def transform_event_summary_data(df: pd.DataFrame) -> pd.DataFrame:
+    # Remove columms containing all blanks
+    df = df.dropna(axis=1, how='all')
+
+    # Rename all columns
+    df.columns = EVENT_HISTORY_SUMMARY
+
+    # Transform 'Date' column
+    df['Date'] = df.loc[:, 0].str.extract(r'(\d{2}/\d{2}/\d{4})')
+
+    # Transform 'No. Finishers' column
+    # df['No. Finishers'] = df['No. Finishers'].str.extract(r'(\d+)')
+
+    print(df.head())
+    print(df.iloc[:, 0].head())
+
+    return  # df
