@@ -147,12 +147,18 @@ def transform_event_summary_data(df: pd.DataFrame) -> pd.DataFrame:
     df.columns = EVENT_HISTORY_SUMMARY
 
     # Transform 'Date' column
-    df['Date'] = df.loc[:, 0].str.extract(r'(\d{2}/\d{2}/\d{4})')
+    df['Date'] = df['Date'].str.extract(r'(\d{2}/\d{2}/\d{4})')
 
     # Transform 'No. Finishers' column
-    # df['No. Finishers'] = df['No. Finishers'].str.extract(r'(\d+)')
+    df['No. Finishers'] = df['No. Finishers'].str.extract(r'(\d+)')
 
-    print(df.head())
-    print(df.iloc[:, 0].head())
+    # Transform 'No. Volunteers' column
+    df['No. Volunteers'] = df['No. Volunteers'].str.extract(r'(\d+)')
 
-    return  # df
+    # Transform 'First Male Finisher' column
+    df['First Male Finisher'] = df['First Male Finisher'].str.extract(r'([a-zA-Z]+ [a-zA-Z]+)')
+
+    # Transform 'First Female Finisher' column
+    df['First Female Finisher'] = df['First Female Finisher'].str.extract(r'([a-zA-Z]+ [a-zA-Z]+)')
+
+    return df

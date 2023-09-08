@@ -4,16 +4,18 @@ import requests
 import validate
 import pandas as pd
 import transform_data as td
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class Parkrun:
 
-    __USER_AGENT = "Chrome/43.0.2357"
+    USER_AGENT = "Chrome/43.0.2357"
 
-    __LATEST_RESULTS = "latest_results"
-    __ATTENDANCE_RECORDS = "attendance_records"
-    __EVENT_HISTORY = "event_history"
-    __SINGLE_EVENT = "single_event"
+    LATEST_RESULTS = "latest_results"
+    ATTENDANCE_RECORDS = "attendance_records"
+    EVENT_HISTORY = "event_history"
+    SINGLE_EVENT = "single_event"
 
     # countries = rf.countries_data
     # parkruns = rf.parkrun_events_data
@@ -32,7 +34,7 @@ class Parkrun:
         # self.url_template = rf.get_parkrun_url_template(event_type)
 
         # Set parkrun locations and attendance records
-        self.attendance_records = self.get_attendance_records()
+        self.attendance_records = self.__get_attendance_records()
         self.locations = self.attendance_records.iloc[:, 0].unique().tolist()
 
     def modify_url_template(self, event_type: str) -> str:
@@ -70,7 +72,7 @@ class Parkrun:
         webpage_url = self.modify_url_template(event_type)
         print(f"Webpage url: {webpage_url}")
         response = requests.get(webpage_url, headers={
-                                'user-agent': self.USER_AGENT})
+                                'user-agent': self.USER_AGENT}, verify=False)
         if response != None and response.status_code == 200:
             html_tables = pd.read_html(response.content)
 
@@ -184,4 +186,25 @@ class Parkrun:
         #
         event_numbers = None
 
-        return
+        return df
+    
+    def get_event_history_one(self, country: str = None, location: str = None, event_no: int = None, detailed=None) -> pd.DataFrame:
+        #
+        # TODO: Retrieve webpage content
+        #
+
+        df = self.get_html_tables(self.SINGLE_EVENT)
+
+        df = td.transform_latest_results(df, detailed)
+
+        '''
+        Output data frame needs to have the following columns:
+            - Position.
+            - Gender
+            - Age Group
+            - Club
+            - Time
+            - PB/FT?
+        '''
+
+        return df

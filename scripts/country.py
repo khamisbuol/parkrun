@@ -19,10 +19,10 @@ class Country:
             "BASE_URL", self.url)
 
         # Set parkrun locations
-        self.locations = self.get_attendance_records(
-        ).iloc[:, 0].unique().tolist()
+        self.attendance_records = self.get_attendance_records()
+        self.locations = self.attendance_records.iloc[:, 0].unique().tolist()
 
-    def get_attendance_records(self) -> pd.DataFrame:
+    def __get_attendance_records(self) -> pd.DataFrame:
         """
         Retreieve attendance records of a country object. 
 
