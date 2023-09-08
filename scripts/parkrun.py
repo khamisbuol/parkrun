@@ -8,12 +8,12 @@ import transform_data as td
 
 class Parkrun:
 
-    USER_AGENT = "Chrome/43.0.2357"
+    __USER_AGENT = "Chrome/43.0.2357"
 
-    LATEST_RESULTS = "latest_results"
-    ATTENDANCE_RECORDS = "attendance_records"
-    EVENT_HISTORY = "event_history"
-    SINGLE_EVENT = "single_event"
+    __LATEST_RESULTS = "latest_results"
+    __ATTENDANCE_RECORDS = "attendance_records"
+    __EVENT_HISTORY = "event_history"
+    __SINGLE_EVENT = "single_event"
 
     # countries = rf.countries_data
     # parkruns = rf.parkrun_events_data
@@ -31,9 +31,9 @@ class Parkrun:
         # self.event_info = rf.get_parkrun_event_info(event_type)
         # self.url_template = rf.get_parkrun_url_template(event_type)
 
-        # Set parkrun locations
-        self.locations = self.get_attendance_records(
-        ).iloc[:, 0].unique().tolist()
+        # Set parkrun locations and attendance records
+        self.attendance_records = self.get_attendance_records()
+        self.locations = self.attendance_records.iloc[:, 0].unique().tolist()
 
     def modify_url_template(self, event_type: str) -> str:
         """
@@ -86,7 +86,7 @@ class Parkrun:
         else:
             raise f"ERROR: Data returned is empty for country={self.country}"
 
-    def get_attendance_records(self) -> pd.DataFrame:
+    def __get_attendance_records(self) -> pd.DataFrame:
         """
         Retreieve attendance records of a country object. 
 
