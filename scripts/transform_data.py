@@ -111,7 +111,7 @@ def transform_time_column(col_name: str) -> pd.DataFrame:
     })
 
 
-def transform_latest_results(df: pd.DataFrame, detailed=False) -> pd.DataFrame:
+def transform_event_results(df: pd.DataFrame, detailed=False) -> pd.DataFrame:
 
     # Convert all NaN to empty string
     df = df.fillna("")

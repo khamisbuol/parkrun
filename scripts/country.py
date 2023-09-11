@@ -19,7 +19,7 @@ class Country:
             "BASE_URL", self.url)
 
         # Set parkrun locations
-        self.attendance_records = self.get_attendance_records()
+        self.attendance_records = self.__get_attendance_records()
         self.locations = self.attendance_records.iloc[:, 0].unique().tolist()
 
     def __get_attendance_records(self) -> pd.DataFrame:

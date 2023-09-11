@@ -12,13 +12,14 @@ import requests
 # print(pk_country.locations)
 # print(pk_country.get_attendance_records())
 
-count = "Australia"
-loc = "Tuggeranong"
+count = "Denmark"
+loc = "Brabrand"
 event_type = "latest_results"
-event_no = "420"
+event_no = "627"
 # event_type = "latest_results"
 
 pr = parkrun.Parkrun(count, loc, event_no)
-print(pr.get_event_history_one())
+denmark = pr.get_latest_results_country()
+denmark.to_csv("denmark.csv")
 
 # print(pr.locations)

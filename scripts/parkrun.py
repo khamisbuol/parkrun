@@ -71,17 +71,22 @@ class Parkrun:
     def get_html_tables(self, event_type: str):
         webpage_url = self.modify_url_template(event_type)
         print(f"Webpage url: {webpage_url}")
-        response = requests.get(webpage_url, headers={
-                                'user-agent': self.USER_AGENT}, verify=False)
-        if response != None and response.status_code == 200:
-            html_tables = pd.read_html(response.content)
+        try:
+            response = requests.get(webpage_url, headers={
+                                    'user-agent': self.USER_AGENT}, verify=False)
+            if response != None and response.status_code == 200:
+                html_tables = pd.read_html(response.content)
 
-            if html_tables != None and len(html_tables) == 1:
-                df = html_tables[0]
+                if html_tables != None and len(html_tables) == 1:
+                    df = html_tables[0]
+                else:
+                    raise f"ERROR: Could not retreive data for country={self.country} with url={self.country_url}"
             else:
-                raise f"ERROR: Could not retreive data for country={self.country} with url={self.country_url}"
-        else:
-            raise f"ERROR: Could not to get data for country={self.country} with url={webpage_url}. Response code = {response.status_code}"
+                raise f"ERROR: Could not to get data for country={self.country} with url={webpage_url}. Response code = {response.status_code}"
+        except:
+            print(f"ERROR: Could not connect to webpage for "\
+                   "country={self.country} with url={webpage_url}. Response "\
+                   "code = {response.status_code}")
 
         if not df.empty:
             return df
@@ -121,7 +126,7 @@ class Parkrun:
         """
         df = self.get_html_tables(self.LATEST_RESULTS)
 
-        df = td.transform_latest_results(df, detailed)
+        df = td.transform_event_results(df, detailed)
 
         # Add location column
         df["Location"] = self.location
@@ -129,27 +134,25 @@ class Parkrun:
         return df
 
     def get_latest_results_country(self, detailed=False):
-        print(f"Getting latest results for country={self.country}")
         latest_results_country: list = []
         for location in self.locations:
-            print(f"location={location}")
             self.location = location
             try:
                 latest_location_results = self.get_latest_results_location(
                     detailed)
                 latest_results_country.append(latest_location_results)
+                latest_results = pd.concat(latest_results_country)
+
+                # Add country column to dataframe
+                latest_results["Country"] = self.country
+                latest_results = latest_results.reset_index(drop=True)
             except:
                 print(
-                    f"ERROR: Could not get latest results for {self.country}, {location}.")
-
-            latest_results = pd.concat(latest_results_country)
-
-            # Add country column to dataframe
-            latest_results["Country"] = self.country
-            latest_results = latest_results.reset_index(drop=True)
+                    f"ERROR: Could not get latest results for {location}, {self.country}.")
+            print(f"-----------------------------------------------------------------------\n")
         return latest_results
 
-    def get_event_history_summary(self, country: str = None, location: str = None):
+    def get_event_history_summary(self):
         """
         Retrieve event history summary, given a country and location
 
@@ -161,50 +164,28 @@ class Parkrun:
             Pandas dataframe:   Dataframe containing event history of the given location. 
         """
         #
-        # TODO: Retrieve webpage content
-        #       IMPORTANT, need to ensure event_no is returned so it can be used
-        #       by the get_event_history
+        # Retrieve html tables
         #
         df = self.get_html_tables(self.EVENT_HISTORY)
 
-        '''
-        Output data frame needs to have the following columns:
-            - Event No. VALID as 'Event ##'
-            - Date INVALID, contains date, finisher, their times etc (just take date from this)
-            - No. Finishers (can retrieve from Date/First Finishers column)
-            - No. Volunteers (Can retreive from "Finishers" column)
-            - First Male Finisher (Volunteers column)
-            - First Male Finisher Time (can retreive from 'Male First Finisher' column)
-            - First Female Finisher
-            - First Female Finisher Time (can retreive from Female First Finisher column)
-        '''
+        #
+        # Transform summary table
+        #
         df = td.transform_event_summary_data(df)
-
-        # print(df.iloc[2].head())
-        #
-        # TODO: Return list of event numbers
-        #
-        event_numbers = None
 
         return df
     
-    def get_event_history_one(self, country: str = None, location: str = None, event_no: int = None, detailed=None) -> pd.DataFrame:
-        #
-        # TODO: Retrieve webpage content
-        #
+    def get_event_history_one(self, country: str = None, location: str = None, 
+                              event_no: int = None, detailed=None) -> pd.DataFrame:
 
+        #
+        # Retrieve tables for single event
+        #
         df = self.get_html_tables(self.SINGLE_EVENT)
 
-        df = td.transform_latest_results(df, detailed)
-
-        '''
-        Output data frame needs to have the following columns:
-            - Position.
-            - Gender
-            - Age Group
-            - Club
-            - Time
-            - PB/FT?
-        '''
+        #
+        # Transform event dataframe
+        #
+        df = td.transform_event_results(df, detailed)
 
         return df
