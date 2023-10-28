@@ -2,6 +2,7 @@
 import read_files as rf
 import requests
 import validate
+import sys
 import pandas as pd
 import transform_data as td
 import urllib3
@@ -20,8 +21,7 @@ class Parkrun:
     # countries = rf.countries_data
     # parkruns = rf.parkrun_events_data
 
-    def __init__(self, country: str,
-                 location: str = None, event_no: str = None) -> None:
+    def __init__(self, country: str, location: str = None, event_no: str = None) -> None:
 
         # self.event_type = event_type
         self.country = country
@@ -48,24 +48,28 @@ class Parkrun:
         -   location:       The location of a particular parkrun. E.g., parkville
         -   event_no:       The parkrun event number. For example, 123
         """
-        url_template = rf.get_parkrun_url_template(event_type)
-        url_location = td.transform_location(self.location)
+        try:
+            url_template = rf.get_parkrun_url_template(event_type)
+            url_location = td.transform_location(self.location)
 
-        match event_type:
-            case "attendance_records":
-                modified_url = url_template.replace(
-                    "BASE_URL", self.country_url)
-            case "latest_results" | "event_history":
-                modified_url = url_template.replace(
-                    "BASE_URL", self.country_url).replace(
-                    "LOCATION", url_location)
-            case "single_event":
-                modified_url = url_template.replace(
-                    "BASE_URL", self.country_url).replace(
-                    "LOCATION", url_location).replace(
-                    "EVENT_NO", self.event_no)
-            case _:
-                modified_url = None
+            match event_type:
+                case "attendance_records":
+                    modified_url = url_template.replace(
+                        "BASE_URL", self.country_url)
+                case "latest_results" | "event_history":
+                    modified_url = url_template.replace(
+                        "BASE_URL", self.country_url).replace(
+                        "LOCATION", url_location)
+                case "single_event":
+                    modified_url = url_template.replace(
+                        "BASE_URL", self.country_url).replace(
+                        "LOCATION", url_location).replace(
+                        "EVENT_NO", self.event_no)
+                case _:
+                    modified_url = None
+        except Exception as e:
+            print(f"ERROR: {e}")
+            sys.exit(1)
         return modified_url
 
     def get_html_tables(self, event_type: str):
@@ -80,18 +84,21 @@ class Parkrun:
                 if html_tables != None and len(html_tables) == 1:
                     df = html_tables[0]
                 else:
-                    raise f"ERROR: Could not retreive data for country={self.country} with url={self.country_url}"
+                    raise ValueError(f"Could not retreive data for country={self.country} "\
+                                     f"with url={self.country_url}")
             else:
-                raise f"ERROR: Could not to get data for country={self.country} with url={webpage_url}. Response code = {response.status_code}"
-        except:
-            print(f"ERROR: Could not connect to webpage for "\
-                   "country={self.country} with url={webpage_url}. Response "\
-                   "code = {response.status_code}")
+                raise f"ERROR: Could not to get data for country={self.country} with "\
+                      f"url={webpage_url}. Response code = {response.status_code}"
+        except Exception as e:
+            print(f"ERROR: {e}\n"\
+                  f"country={self.country} with url={webpage_url}. Response "\
+                  f"code = {response.status_code}")
+            sys.exit(1)
 
         if not df.empty:
             return df
         else:
-            raise f"ERROR: Data returned is empty for country={self.country}"
+            raise ValueError(f"ERROR: Data returned is empty for country={self.country}")
 
     def __get_attendance_records(self) -> pd.DataFrame:
         """
@@ -101,18 +108,22 @@ class Parkrun:
             Pandas dataframe:   A dataframe containing attendance records of the
                                 given country. 
         """
-        # Get html tables
-        df = self.get_html_tables(self.ATTENDANCE_RECORDS)
+        try:
+            # Get html tables
+            df = self.get_html_tables(self.ATTENDANCE_RECORDS)
 
-        # Remove any 'Unnamed' columns
-        attendance_records = df.loc[:, ~df.columns.str.startswith(
-            "Unnamed:")]
-        if not attendance_records.empty:
-            return attendance_records
-        else:
-            raise f"ERROR: Attendance record is empty for country={self.country}"
+            # Remove any 'Unnamed' columns
+            attendance_records = df.loc[:, ~df.columns.str.startswith("Unnamed:")]
+            if not attendance_records.empty:
+                return attendance_records
+            else:
+                raise ValueError(f"Attendance record is empty for country={self.country}")
+        except Exception as e:
+            print(f"ERROR: {e}")
+            sys.exit(1)
 
     def get_latest_results_location(self, detailed=False):
+        
         print(f"Getting latest results for location={self.location}")
         """
         Retrieve the latest parkrun results, given a location
@@ -124,12 +135,16 @@ class Parkrun:
         Returns:
             Pandas dataframe:   Dataframe containing latest results of the given location. 
         """
-        df = self.get_html_tables(self.LATEST_RESULTS)
+        try:
+            df = self.get_html_tables(self.LATEST_RESULTS)
 
-        df = td.transform_event_results(df, detailed)
+            df = td.transform_event_results(df, detailed)
 
-        # Add location column
-        df["Location"] = self.location
+            # Add location column
+            df["Location"] = self.location
+        except Exception as e:
+            print(f"ERROR: {e}")
+            sys.exit(1)
 
         return df
 
@@ -163,15 +178,19 @@ class Parkrun:
         Returns:
             Pandas dataframe:   Dataframe containing event history of the given location. 
         """
-        #
-        # Retrieve html tables
-        #
-        df = self.get_html_tables(self.EVENT_HISTORY)
+        try:
+            #
+            # Retrieve html tables
+            #
+            df = self.get_html_tables(self.EVENT_HISTORY)
 
-        #
-        # Transform summary table
-        #
-        df = td.transform_event_summary_data(df)
+            #
+            # Transform summary table
+            #
+            df = td.transform_event_summary_data(df)
+        except Exception as e:
+            print(f"ERROR: {e}")
+            sys.exit(1)
 
         return df
     

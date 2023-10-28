@@ -1,6 +1,8 @@
 pandas
 requests
 lxml
+html5
+beautifulsoup4
 yaml
 unidecode
 googletrans==4.0.0-rc1
