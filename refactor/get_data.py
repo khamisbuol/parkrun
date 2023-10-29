@@ -16,6 +16,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 HEADERS = {'user-agent': 'Chrome/43.0.2357'}
 SUCCESS = 200
 
+COUNTRIES_URL = 'https://www.parkrun.com/countries/'
+
 def get_response(url: str) -> bytes:
     try:
         print(f"Getting data from url = {url}")
@@ -77,9 +79,9 @@ def get_html_table(url: str, get_id: bool = False) -> pd.DataFrame:
         # Parse the HTML content of the webpage
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Get table results
-        table = soup.find('table', class_='results')
-
+        # Get table from url (first table)
+        table = soup.find('table', {'class': ['results', 'sortable']})
+        # table = soup.find('table') # Get (first table)
         # Verify that table data was able to be extracted
         if not table:
             raise ValueError("Unable to find table data for class = 'result'")
@@ -103,6 +105,10 @@ def get_html_table(url: str, get_id: bool = False) -> pd.DataFrame:
                 
                 val = row.text
                 row_list.append(val)
+
+                # Add url column (for locations)
+                if 'results' in str(row):
+                    row_list.append(row.a['href'])
             
             if all(value == '' for value in row_list):
                     continue
@@ -137,6 +143,10 @@ def get_html_table(url: str, get_id: bool = False) -> pd.DataFrame:
     
     return df
 
+def get_countries():
+    df = get_html_table(COUNTRIES_URL)
+    
+    return
 
 # url = 'https://www.parkrun.com/results/mostfirstfinishes/'
 # url = 'https://www.parkrun.com/results/mostevents/'

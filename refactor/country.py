@@ -1,7 +1,7 @@
-import parkrun
-import difflib
-import pandas as pd
-from get_data import get_html_tables, get_response
+# import parkrun
+# import difflib
+# import pandas as pd
+from get_data import get_html_table, get_countries
 
 class Country:
     #
@@ -36,76 +36,91 @@ class Country:
 
     def __init__(self, name) -> None:
 
-        self.pr   = parkrun.Parkrun()
-        self.name = name \
-                    if name in self.pr.countries \
-                    else difflib.get_close_matches(name, self.pr.countries)[0]
+        #
+        # This approach will raise issues of self-referencing.
+        # A better design is to import country module into parkrun, location 
+        # into country, and event into location. 
+        #
+        # self.pr   = parkrun.Parkrun()
+        # self.name = name \
+        #             if name in self.pr.countries_list \
+        #             else difflib.get_close_matches(name, self.pr.countries_list)[0]
         
-        self.info = self.pr.countries_dict[self.name]['info']
-        self.url  = self.pr.countries_dict[self.name]['url']
+        # self.info = self.pr.countries_dict[self.name]['info']
+        # self.url  = self.pr.countries_dict[self.name]['url']
+        # self.locations = 
+        #############################################################################
+        self.name = name
 
         pass
 
+    def __get_locations(self):
+        url = f"{self.url}{Country.ATTENDANCE_RECORDS}"
+            # Get table data
+        df = get_html_table(url)
+
+        return
     def get_attendance_records(self):
         try:
             url = f"{self.url}{Country.ATTENDANCE_RECORDS}"
             # Get table data
-            df = get_html_tables(url)
+            df = get_html_table(url)
 
             # Drop unnamed column
-            df = df.drop(df.columns[1], axis=1)
+            # df = df.drop(df.columns[1], axis=1)
+
         except Exception as e:
             print(f"ERROR: {e}")
         return df
     
     def get_most_events(self):
         url = f"{self.url}{Country.MOST_EVENTS}"
-        df = get_html_tables(url)
+        df = get_html_table(url)
         return df
     
     def get_largest_clubs(self):
         url = f"{self.url}{Country.LARGEST_CLUBS}"
-        df = get_html_tables(url)
+        df = get_html_table(url)
         return df
     
     def get_not_parkrunners(self):
         url = f"{self.url}{Country.NOT_PARKRUN}"
-        df = get_html_tables(url)
+        df = get_html_table(url)
         return df
     
     def get_freedom_runners(self):
         url = f"{self.url}{Country.FREEDOM_RUNNERS}"
-        df = get_html_tables(url)
+        df = get_html_table(url)
         return df
     
     def get_most_first_finishers(self):
         url = f"{self.url}{Country.MOST_FIRST_FINISHES}"
-        df = get_html_tables(url)
+        df = get_html_table(url)
         return df
     
     def get_first_finishes(self):
         url = f"{self.url}{Country.FIRST_FINISHES}"
-        df = get_html_tables(url)
+        df = get_html_table(url)
         return df
     
     def get_sub_seventeen_runners(self):
         url = f"{self.url}{Country.SUB_SEVENTEEN}"
-        df = get_html_tables(url)
+        df = get_html_table(url)
         return df
     
     def get_top_age_grade(self):
         url = f"{self.url}{Country.TOP_AGE_GRADE}"
-        df = get_html_tables(url)
+        df = get_html_table(url)
         return df
     
     def get_new_category_records(self):
         url = f"{self.url}{Country.NEW_CATEGORY_RECORDS}"
-        df = get_html_tables(url)
+        df = get_html_table(url)
         return df
     
     def get_cource_records(self):
         url = f"{self.url}{Country.COURSE_RECORDS}"
-        df = get_html_tables(url)
+        df = get_html_table(url)
         return df
 
 
