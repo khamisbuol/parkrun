@@ -67,12 +67,12 @@ class Country:
     
     def get_first_finishers(self):
         url = f'{self.url}{Country.FIRST_FINISHERS}'
-        df = transform.get_first_finishers(url)
+        df  = transform.get_first_finishers(url)
         return df
     
     def get_sub_seventeen_runners(self):
         url = f'{self.url}{Country.SUB_SEVENTEEN}'
-        df = transform.get_sub_seventeen_runners(url)
+        df  = transform.get_sub_seventeen_runners(url)
         return df
     
     def get_top_age_grade(self):

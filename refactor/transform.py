@@ -2,37 +2,33 @@ import pandas as pd
 import numpy as np
 from scrape import get_html_table
 
-#
-# This module contains a series of functions that are used to process parkrun
-# data. Data may be for global results, country specific, or location specific.
-#
-
 ###################################################################################################
-#
-# Function list:
-#   - get_first_finishers()       : Retrieves first place finishers
-#   - get_sub_seventeen_runners() : Retrieves athletes who've finished in less than 17 mins
-#   - get_top_age_grade()         : Retrieves atheletes with highest age categories
-#   - get_new_category_records()  : 
-#   - get_course_records()        : Retrieves 
-#   - get_freedom_finishers()     :
-#   - get_attendance_records()    :
-#   - get_most_events()           : Retrieves athletes with most events attendend
-#   - get_most_first_finishes()   : Retrieves atheletes with most first place finishes
-#   - get_largest_clubs()         : Retrieves clubs with largest number of atheletes
-#
+#                                                                                                 #
+# This module contains a series of functions that are used to process parkrun                     #
+# data. Data may be for global results, country specific, or location specific.                   #
+#                                                                                                 #
 ###################################################################################################
 
-FIRST_FINISHERS_COLS = ['Event', 'Athlete ID', 'Athlete Name', 'Gender', 'Club']
+
+###################################################################################################
+#                                                                                                 #
+# Function list:                                                                                  #
+#   - get_first_finishers()       : Retrieves first place finishers                               #
+#   - get_sub_seventeen_runners() : Retrieves athletes who've finished in less than 17 mins       #
+#   - get_top_age_grade()         : Retrieves atheletes with highest age categories               #
+#   - get_new_category_records()  : Retrieves age group category records                          #
+#   - get_course_records()        : Retrieves course records for Parkrun locations                #
+#   - get_freedom_finishers()     : Retrieves data for athletes who have run freedom Parkrun      #
+#   - get_attendance_records()    : Retrieves attendance records for Parkrun locations            #
+#   - get_most_events()           : Retrieves athletes with most events attendend                 #
+#   - get_most_first_finishes()   : Retrieves atheletes with most first place finishes            #
+#   - get_largest_clubs()         : Retrieves clubs with largest number of atheletes              #
+#   - get_not_parkrunners()       : Retrieves athletes who have run (not)parkruns !!DEPRECATED!!  #
+#                                                                                                 #
+###################################################################################################
+
 
 def get_first_finishers(url):
-
-    # 
-    # Getting data from url = https://www.parkrun.org.uk/results/firstfinishers
-    # process.py:44: SettingWithCopyWarning: 
-    # A value is trying to be set on a copy of a slice from a DataFrame.
-    # Try using .loc[row_indexer,col_indexer] = value instead
-    #
 
     df = get_html_table(url)
 
@@ -55,7 +51,8 @@ def get_first_finishers(url):
     df = pd.concat([df1, df2])
 
     # Reorder columns
-    df = df[FIRST_FINISHERS_COLS]
+    col_reorder = ['Event', 'Athlete ID', 'Athlete Name', 'Gender', 'Club']
+    df = df[col_reorder]
 
     #
     # Replace any Unattached values with blanks. This occurs in the global
@@ -123,13 +120,6 @@ def get_new_category_records(url):
     return df
 
 def get_course_records(url):
-
-    # 
-    # Getting data from url = https://www.parkrun.jp/results/courserecords
-    # process.py:139: SettingWithCopyWarning: 
-    # A value is trying to be set on a copy of a slice from a DataFrame.
-    # Try using .loc[row_indexer,col_indexer] = value instead
-    #
 
     df = get_html_table(url)
 
@@ -225,7 +215,7 @@ def get_most_events_attended(url):
                       'Parkrun Club', 'No. Unique Events (in Home Country)', 
                       'Total Parkruns (in Home Country)', 'Total Runs Worldwide']
 
-    # # Convert 'Total Runs Worldwide' to int
+    # Convert 'Total Runs Worldwide' to int
     df['Total Runs Worldwide']   = df['Total Runs Worldwide'].astype(int)
 
     # Assign milestones

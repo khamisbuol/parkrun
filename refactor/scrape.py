@@ -226,9 +226,9 @@ def get_locations(name):
     return locations
 
 def get_countries():
-    """
-    This function reads 
-    """
+    '''
+    This function returns a dictionary of countries with their name, urls, and info
+    '''
     try:
 
         response = get_response(COUNTRIES_URL)
