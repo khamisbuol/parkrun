@@ -112,7 +112,7 @@ def get_html_tables(url: str) -> pd.DataFrame:
 #         # print(f'extract_athlete_info() ERROR: {e}')
 
 
-def get_html_table(url: str) -> pd.DataFrame:
+def get_html_table(url: str, locations=False) -> pd.DataFrame:
     try:
         data = []
         
@@ -151,8 +151,8 @@ def get_html_table(url: str) -> pd.DataFrame:
                         row_list.append(id)
 
                     # Add url column (for locations)
-                    # if str(data_url).split('/')[-1] == 'results':
-                    #     row_list.append(data_url)
+                    if locations and str(data_url).split('/')[-1] == 'results':
+                        row_list.append(data_url)
                 
                 # Add literal text value to the row
                 val = table_data.text
@@ -201,10 +201,10 @@ def get_country_details(name):
     
     return url, info
 
-def get_locations(name):
+def get_locations(country):
     try:
         
-        url, info = get_country_details(name)
+        url, _ = get_country_details(country)
         
         atttendance_records_url = f'{url}results/attendancerecords'
 
@@ -212,18 +212,29 @@ def get_locations(name):
         # Use attendance records to get names of locations and
         # transform dataframe to consist of just event names and urls
         #
-        df = get_html_table(atttendance_records_url)
+        df = get_html_table(atttendance_records_url, True)
+
         df = df.iloc[:, :2]
 
-        df.columns = ['Event', 'Event URL']
+        df.columns = ['events_url', 'event']
 
         # Create a dictionary of events and their urls
-        locations = dict(zip(df['Event'], df['Event URL']))
+        locations = dict(zip(df['event'], df['events_url']))
 
     except Exception as e:
         print(f'ERROR: {e}')
         sys.exit(1)
     return locations
+
+def get_location_url(country, name):
+    locations = get_locations(country)
+    location_list = list(locations.keys())
+    l_name = name \
+        if name in locations \
+        else difflib.get_close_matches(name, location_list)[0]
+    
+    url = locations[l_name]
+    return url
 
 def get_countries():
     '''

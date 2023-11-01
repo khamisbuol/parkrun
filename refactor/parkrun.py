@@ -17,7 +17,7 @@ class Parkrun:
     MOST_FIRST_FINISHES_URL = 'https://www.parkrun.com/results/mostfirstfinishes/'
     LARGEST_CLUBS_URL       = 'https://www.parkrun.com/results/largestclubs/'
 
-    def __init__(self) -> None:
+    def __init__(self):
 
         self.countries = scrape.get_countries()
         pass

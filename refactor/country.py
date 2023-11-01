@@ -1,4 +1,4 @@
-import scrape as gd
+from scrape import get_country_details
 import transform
 
 class Country:
@@ -16,10 +16,10 @@ class Country:
     NEW_CATEGORY_RECORDS = 'results/newcategoryrecords'
     COURSE_RECORDS       = 'results/courserecords'    
 
-    def __init__(self, name) -> None:
+    def __init__(self, name):
         self.name = name
         self.url, \
-        self.info = gd.get_country_details(name)
+        self.info = get_country_details(name)
 
         # self.locations = get_locations(name) # To be used for retrieving all country data
 

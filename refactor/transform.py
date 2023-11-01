@@ -23,6 +23,7 @@ from scrape import get_html_table
 #   - get_most_events()           : Retrieves athletes with most events attendend                 #
 #   - get_most_first_finishes()   : Retrieves atheletes with most first place finishes            #
 #   - get_largest_clubs()         : Retrieves clubs with largest number of atheletes              #
+#   - get_latest_results()        : Retrieves the latest results of a Parkrun location            #
 #   - get_not_parkrunners()       : Retrieves athletes who have run (not)parkruns !!DEPRECATED!!  #
 #                                                                                                 #
 ###################################################################################################
@@ -239,6 +240,9 @@ def get_largest_clubs(url):
                     'No. Runs']
     return df
 
+def get_latest_results(url):
+    df = get_html_table(url)
+    return df
 
 def get_not_parkrunners(url):
     '''
