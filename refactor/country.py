@@ -1,130 +1,92 @@
-# import parkrun
-# import difflib
-# import pandas as pd
-from get_data import get_html_table, get_countries
+import scrape as gd
+import transform
 
 class Country:
-    #
-    # Attributes of a country
-    # - Get attendance records: https://www.parkrun.co.at/results/attendancerecords/
-    # - Get locations: from attendance records
-    # - Get parkrunners who have run the most events: https://www.parkrun.co.at/results/mostevents/
-    # - Get largest clubs: https://www.parkrun.co.at/results/largestclubs/
-    # - Get club 100 parkrunners (parkrunners who've recently reached 100 parkruns): https://www.parkrun.co.at/results/100clubbers/
-    # - Get not parkrun history: https://www.parkrun.co.at/results/notparkrun/
-    # - Get freedom runners: https://www.parkrun.co.at/results/freedom/ 
-    # - Get most first finishes: https://www.parkrun.co.at/results/mostfirstfinishes/
-    # - Get first finishers of the week: https://www.parkrun.co.at/results/firstfinishers/
-    # - Get sub 17 runners of the week: https://www.parkrun.co.at/results/sub17/
-    # - Top Age grade of the week: https://www.parkrun.co.at/results/topagegrade/
-    # - New Age Category set this week: https://www.parkrun.co.at/results/newcategoryrecords/
-    # - Course records: https://www.parkrun.co.at/results/courserecords/
 
     ATTENDANCE_RECORDS   = 'results/attendancerecords'
     MOST_EVENTS          = 'results/mostevents'
     LARGEST_CLUBS        = 'results/largestclubs'
     HUNDRED_CLUBBERS     = 'results/100clubbers'
     NOT_PARKRUN          = 'results/notparkrun'
-    FREEDOM_RUNNERS      = 'results/freedom'
+    FREEDOM_FINISHERS    = 'results/freedom'
     MOST_FIRST_FINISHES  = 'results/mostfirstfinishes'
-    FIRST_FINISHES       = 'results/firstfinishers'
+    FIRST_FINISHERS      = 'results/firstfinishers'
     SUB_SEVENTEEN        = 'results/sub17'
     TOP_AGE_GRADE        = 'results/topagegrade'
     NEW_CATEGORY_RECORDS = 'results/newcategoryrecords'
-    COURSE_RECORDS       = 'results/courserecords'
-    
+    COURSE_RECORDS       = 'results/courserecords'    
 
     def __init__(self, name) -> None:
-
-        #
-        # This approach will raise issues of self-referencing.
-        # A better design is to import country module into parkrun, location 
-        # into country, and event into location. 
-        #
-        # self.pr   = parkrun.Parkrun()
-        # self.name = name \
-        #             if name in self.pr.countries_list \
-        #             else difflib.get_close_matches(name, self.pr.countries_list)[0]
-        
-        # self.info = self.pr.countries_dict[self.name]['info']
-        # self.url  = self.pr.countries_dict[self.name]['url']
-        # self.locations = 
-        #############################################################################
         self.name = name
+        self.url, \
+        self.info = gd.get_country_details(name)
+
+        # self.locations = get_locations(name) # To be used for retrieving all country data
 
         pass
 
-    def __get_locations(self):
-        url = f"{self.url}{Country.ATTENDANCE_RECORDS}"
-            # Get table data
-        df = get_html_table(url)
+    # def get_locations(self):
+    #     url = f"{self.url}{Country.ATTENDANCE_RECORDS}"
+    #         # Get table data
+    #     df = gd.get_html_table(url)
 
-        return
+    #     return df
+    
     def get_attendance_records(self):
-        try:
-            url = f"{self.url}{Country.ATTENDANCE_RECORDS}"
-            # Get table data
-            df = get_html_table(url)
 
-            # Drop unnamed column
-            # df = df.drop(df.columns[1], axis=1)
-
-        except Exception as e:
-            print(f"ERROR: {e}")
+        url = f'{self.url}{Country.ATTENDANCE_RECORDS}'
+        df  = transform.get_attendance_records(url)
         return df
     
-    def get_most_events(self):
-        url = f"{self.url}{Country.MOST_EVENTS}"
-        df = get_html_table(url)
+    def get_most_events_attended(self):
+        url = f'{self.url}{Country.MOST_EVENTS}'
+        df  = transform.get_most_events_attended(url)
         return df
     
     def get_largest_clubs(self):
-        url = f"{self.url}{Country.LARGEST_CLUBS}"
-        df = get_html_table(url)
+        url = f'{self.url}{Country.LARGEST_CLUBS}'
+        df  = transform.get_largest_clubs(url)
         return df
     
-    def get_not_parkrunners(self):
-        url = f"{self.url}{Country.NOT_PARKRUN}"
-        df = get_html_table(url)
+    def get_freedom_finishers(self):
+        '''
+        This was initially for during covid, and in limited countries. No longer
+        available in some countries, and may soon get deprecated. 
+
+        Unavailable in Japan for example
+
+        '''
+        url = f'{self.url}{Country.FREEDOM_FINISHERS}'
+        df  = transform.get_freedom_finishers(url)
         return df
     
-    def get_freedom_runners(self):
-        url = f"{self.url}{Country.FREEDOM_RUNNERS}"
-        df = get_html_table(url)
+    def get_most_first_finishes(self):
+        url = f'{self.url}{Country.MOST_FIRST_FINISHES}'
+        df  = transform.get_most_first_finishes(url)
         return df
     
-    def get_most_first_finishers(self):
-        url = f"{self.url}{Country.MOST_FIRST_FINISHES}"
-        df = get_html_table(url)
-        return df
-    
-    def get_first_finishes(self):
-        url = f"{self.url}{Country.FIRST_FINISHES}"
-        df = get_html_table(url)
+    def get_first_finishers(self):
+        url = f'{self.url}{Country.FIRST_FINISHERS}'
+        df = transform.get_first_finishers(url)
         return df
     
     def get_sub_seventeen_runners(self):
-        url = f"{self.url}{Country.SUB_SEVENTEEN}"
-        df = get_html_table(url)
+        url = f'{self.url}{Country.SUB_SEVENTEEN}'
+        df = transform.get_sub_seventeen_runners(url)
         return df
     
     def get_top_age_grade(self):
-        url = f"{self.url}{Country.TOP_AGE_GRADE}"
-        df = get_html_table(url)
+        url = f'{self.url}{Country.TOP_AGE_GRADE}'
+        df  = transform.get_top_age_grade(url)
+
         return df
     
     def get_new_category_records(self):
-        url = f"{self.url}{Country.NEW_CATEGORY_RECORDS}"
-        df = get_html_table(url)
+        url = f'{self.url}{Country.NEW_CATEGORY_RECORDS}'
+        df  = transform.get_new_category_records(url)
         return df
     
-    def get_cource_records(self):
-        url = f"{self.url}{Country.COURSE_RECORDS}"
-        df = get_html_table(url)
+    def get_course_records(self):
+        url = f'{self.url}{Country.COURSE_RECORDS}'
+        df  = transform.get_course_records(url)
         return df
-
-
-
-    
-    
-    pass
