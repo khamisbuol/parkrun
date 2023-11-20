@@ -14,7 +14,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # Would likely need to import the translate module. 
 #
 
-HEADERS    = {'user-agent': 'Chrome/43.0.2357'}
+HEADERS    = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
 SUCCESS    = 200
 NO_SERVICE = 503
 
@@ -192,8 +192,8 @@ def get_country_details(name):
 
     if not url:
             raise KeyError(f'Unable to find url for {name} in {countries}')
-    if not info:
-            raise KeyError(f'Unable to find info for {name} in {countries}')
+    # if not info:
+    #         raise KeyError(f'Unable to find info for {name} in {countries}')
     
     # Add a forward slash if it's not at the end the generated url
     if url[-1] != '/':
@@ -203,7 +203,6 @@ def get_country_details(name):
 
 def get_locations(country):
     try:
-        
         url, _ = get_country_details(country)
         
         atttendance_records_url = f'{url}results/attendancerecords'
@@ -256,6 +255,8 @@ def get_countries():
             name = country_section.h2.string
             info = country_section.p.string
             url  = country_section.a['href']
+
+            # url =  f'{url}/' if url[-1] != '/' else url
             
             # Add info and url for each country to dictionary
             countries[name] = {'info': info, 'url': url}
